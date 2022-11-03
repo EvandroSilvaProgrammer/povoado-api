@@ -52,5 +52,17 @@ export default class PeopleController {
     }
   }
 
-  public async destroy({}: HttpContextContract) {}
+  /*
+    Status Options | 0 => Block/delete || 1 => Active
+  */
+    public async destroy({ params }: HttpContextContract) {
+      const person = await Person.findOrFail(params.id)
+  
+      person.status = false
+  
+      return {
+        message: 'Person soft delete successfully',
+        data: person,
+      }
+    }
 }
