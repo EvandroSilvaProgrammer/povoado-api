@@ -11,7 +11,6 @@ export default class PeopleController {
     }
   }
 
-
   public async store({ request, response }: HttpContextContract) {
     const body = request.body()
 
@@ -25,7 +24,16 @@ export default class PeopleController {
     }
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({ params }: HttpContextContract) {
+    try {
+      const person = await Person.query().where('id', params.id).preload('contacts').first()
+      if (person) {
+        return person
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   public async edit({}: HttpContextContract) {}
 
