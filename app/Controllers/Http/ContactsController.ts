@@ -54,6 +54,14 @@ export default class ContactsController {
     }
   }
 
+  public async showContactByEmail({ params }: HttpContextContract) {
+    const personContact = await Contact.query().whereILike('email', `%${params.email}%`).preload('person')
+
+    return {
+      data: personContact,
+    }
+  }
+
   public async edit({ }: HttpContextContract) { }
 
   public async update({ }: HttpContextContract) { }
