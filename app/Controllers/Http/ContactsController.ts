@@ -62,9 +62,22 @@ export default class ContactsController {
     }
   }
 
-  public async edit({ }: HttpContextContract) { }
+  public async update({ params, request }: HttpContextContract) {
+    const body = request.body()
 
-  public async update({ }: HttpContextContract) { }
+    const contact = await Contact.findOrFail(params.id)
 
-  public async destroy({ }: HttpContextContract) { }
+    contact.phone = body.phone
+    contact.email = body.email
+    contact.adress = body.adress
+    contact.type = body.type
+    contact.status = body.status
+    
+    await contact.save()
+
+    return {
+      message: 'Contact updated successfully',
+      data: contact,
+    }
+  }
 }
