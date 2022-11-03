@@ -12,9 +12,18 @@ export default class PeopleController {
   }
 
 
-  public async create({}: HttpContextContract) {}
+  public async store({ request, response }: HttpContextContract) {
+    const body = request.body()
 
-  public async store({}: HttpContextContract) {}
+    const person = await Person.create(body)
+
+    response.status(201)
+
+    return {
+      message: 'Person created successfully',
+      data: person,
+    }
+  }
 
   public async show({}: HttpContextContract) {}
 
