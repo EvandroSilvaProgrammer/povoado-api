@@ -4,11 +4,11 @@ import Person from './Person'
 
 export default class Contact extends BaseModel {
 
-  @column()
-  public id: number
-
   @belongsTo(() => Person)
   public person: BelongsTo<typeof Person>
+
+  @column()
+  public id: number
 
   @column()
   public phone: string
