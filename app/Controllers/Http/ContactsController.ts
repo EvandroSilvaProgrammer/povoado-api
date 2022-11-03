@@ -47,7 +47,7 @@ export default class ContactsController {
   }
 
   public async showContactByPhone({ params }: HttpContextContract) {
-    const personContact = await Contact.query().whereILike('telefone', `%${params.telefone}%`).preload('person')
+    const personContact = await Contact.query().whereILike('phone', `%${params.phone}%`).preload('person')
 
     return {
       data: personContact,
