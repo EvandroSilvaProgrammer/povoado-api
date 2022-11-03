@@ -35,9 +35,22 @@ export default class PeopleController {
     }
   }
 
-  public async edit({}: HttpContextContract) {}
+  public async update({ params, request }: HttpContextContract) {
+    const body = request.body()
 
-  public async update({}: HttpContextContract) {}
+    const person = await Person.findOrFail(params.id)
+
+    person.name = body.name
+    person.birth_date = body.birth_date
+    person.status = body.status
+
+    await person.save()
+
+    return {
+      message: 'Person updated successfully',
+      data: person,
+    }
+  }
 
   public async destroy({}: HttpContextContract) {}
 }
