@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Contact from 'App/Models/Contact'
+import Person from 'App/Models/Person'
 
 export default class ContactsController {
   public async index() {
@@ -11,15 +12,37 @@ export default class ContactsController {
     }
   }
 
-  public async create({}: HttpContextContract) {}
+  /*
+   Status Option || 0 => Block | 1 => Active
 
-  public async store({}: HttpContextContract) {}
+   Type options || 1 => Personal | 2 => Business
+ */
+  public async store({ params, request }: HttpContextContract) {
 
-  public async show({}: HttpContextContract) {}
+    const person = await Person.findOrFail(params.id)
 
-  public async edit({}: HttpContextContract) {}
+    const contact = new Contact();
 
-  public async update({}: HttpContextContract) {}
+    contact.phone = request.input('telefone');
+    contact.email = request.input('email');
+    contact.adress = request.input('adress');
+    contact.type = request.input('type');
+    contact.status = request.input('status');
+    contact.personId = person.id;
 
-  public async destroy({}: HttpContextContract) {}
+    await Contact.create(contact)
+
+    return {
+      message: 'Contact created sucessfully!!!',
+      data: contact,
+    }
+  }
+
+  public async show({ }: HttpContextContract) { }
+
+  public async edit({ }: HttpContextContract) { }
+
+  public async update({ }: HttpContextContract) { }
+
+  public async destroy({ }: HttpContextContract) { }
 }
