@@ -38,8 +38,14 @@ export default class ContactsController {
     }
   }
 
-  public async show({ }: HttpContextContract) { }
+  public async showContactByName({ params }: HttpContextContract) {
+    const personContact = await Person.query().whereILike('name', `%${params.name}%`).preload('contacts')
 
+    return {
+      data: personContact,
+    }
+  }
+  
   public async edit({ }: HttpContextContract) { }
 
   public async update({ }: HttpContextContract) { }
