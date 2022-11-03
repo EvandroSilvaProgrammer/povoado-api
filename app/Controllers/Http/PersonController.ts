@@ -59,6 +59,8 @@ export default class PeopleController {
       const person = await Person.findOrFail(params.id)
   
       person.status = false
+
+      await person.save()
   
       return {
         message: 'Person soft delete successfully',
