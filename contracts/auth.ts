@@ -5,6 +5,8 @@
  * file.
  */
 
+import User from "App/Models/User"
+
 declare module '@ioc:Adonis/Addons/Auth' {
   /*
   |--------------------------------------------------------------------------
@@ -19,6 +21,18 @@ declare module '@ioc:Adonis/Addons/Auth' {
   |
   */
   interface ProvidersList {
+    providerName: {
+      implementation: LucidProviderContract<typeof User>,
+      config: LucidProviderConfig<typeof User>,
+    }
+    provider: {
+      driver: 'lucid',
+      identifierKey: 'id',
+      uids: ['email'],
+      model: () => typeof import('App/Models/User'),
+      connection: 'pg',
+      hashDriver: 'argon',
+    }
     /*
     |--------------------------------------------------------------------------
     | User Provider
