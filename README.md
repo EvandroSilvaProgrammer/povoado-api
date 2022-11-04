@@ -34,6 +34,8 @@ corporativos.</li>
   <li>Pesquisa de um contacto;</li>
   <li>Listagem de vários contactos;</li>
   <li>Edição e/ou bloqueio de contacto;</li>
+
+  Num cenário a longo prazo é esperado que se tenha uma API de que possa prover as informações de contactos dos angolanos, tal como tinhamos nas antigas listas amarelas. 
 </p>
 
 ---
@@ -130,6 +132,11 @@ localhost:3333/api/user/logout - Logout de usuário
 ---
 ### Modelo conceitual da Base de Dados
 * [PDF](database/Entity-Relationship-Diagram.pdf)
+
+---
+### O que precisa ser feito
+Testes;
+Sistema de autorização eficaz  (administradores, guest)
 
 ## 🦸 Autor
 
