@@ -17,67 +17,88 @@ export default class ContactsController {
 
    Type options || 1 => Personal | 2 => Business
  */
-  public async store({ params, request }: HttpContextContract) {
+  public async store({ params, request, response }: HttpContextContract) {
 
     const person = await Person.findOrFail(params.id)
 
-    const contact = new Contact();
+    if (!person) {
+      throw new Error(`Person with id '${person}' was not found.`);
+    }
 
-    contact.phone = request.input('telefone');
-    contact.email = request.input('email');
-    contact.adress = request.input('adress');
-    contact.type = request.input('type');
-    contact.status = request.input('status');
-    contact.personId = person.id;
+    try {
+      const contact = new Contact();
 
-    await Contact.create(contact)
+      contact.phone = request.input('phone');
+      contact.email = request.input('email');
+      contact.adress = request.input('adress');
+      contact.type = request.input('type');
+      contact.status = request.input('status');
+      contact.personId = person.id;
 
-    return {
-      message: 'Contact created sucessfully!!!',
-      data: contact,
+      await Contact.create(contact)
+
+      response.status(201).send(contact)
+
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
-  public async showContactByName({ params }: HttpContextContract) {
+  public async showContactByName({ params, response }: HttpContextContract) {
     const personContact = await Person.query().whereILike('name', `%${params.name}%`).preload('contacts')
 
-    return {
-      data: personContact,
+    if (personContact.length === 0) {
+      response.status(404)
+      return (`No contact found with name: '${params.name}'`)
     }
+
+    response.status(200).send(personContact)
   }
 
-  public async showContactByPhone({ params }: HttpContextContract) {
+  public async showContactByPhone({ params, response }: HttpContextContract) {
     const personContact = await Contact.query().whereILike('phone', `%${params.phone}%`).preload('person')
 
-    return {
-      data: personContact,
+    if (personContact.length === 0) {
+      response.status(404)
+      return (`No contact found with phone: '${params.phone}'`)
     }
+
+    response.status(200).send(personContact)
   }
 
-  public async showContactByEmail({ params }: HttpContextContract) {
+  public async showContactByEmail({ params, response }: HttpContextContract) {
     const personContact = await Contact.query().whereILike('email', `%${params.email}%`).preload('person')
 
-    return {
-      data: personContact,
+    if (personContact.length === 0) {
+      response.status(404)
+      return (`No contact found with email: '${params.email}'`)
     }
+
+    response.status(200).send(personContact)
   }
 
   public async update({ params, request }: HttpContextContract) {
-    const body = request.body()
 
     const contact = await Contact.findOrFail(params.id)
 
-    contact.phone = body.phone
-    contact.email = body.email
-    contact.adress = body.adress
-    contact.type = body.type
-    contact.status = body.status
-    
-    await contact.save()
+    if (!contact) {
+      throw new Error(`Contact with id '${contact}' was not found.`);
+    }
 
-    return {
-      message: 'Contact updated successfully',
-      data: contact,
+    try {
+      const body = request.body()
+
+      contact.phone = body.phone
+      contact.email = body.email
+      contact.adress = body.adress
+      contact.type = body.type
+      contact.status = body.status
+
+      await contact.save()
+
+      return contact
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 }

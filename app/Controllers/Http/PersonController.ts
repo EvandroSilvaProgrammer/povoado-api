@@ -14,57 +14,60 @@ export default class PeopleController {
   public async store({ request, response }: HttpContextContract) {
     const body = request.body()
 
-    const person = await Person.create(body)
-
-    response.status(201)
-
-    return {
-      message: 'Person created successfully',
-      data: person,
+    try {
+      const person = await Person.create(body)
+      response.status(201).send(person)
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
   public async show({ params }: HttpContextContract) {
-    try {
-      const person = await Person.query().where('id', params.id).preload('contacts').first()
-      if (person) {
-        return person
-      }
-    } catch (error) {
-      console.log(error)
+    const person = await Person.query().where('id', params.id).preload('contacts').first()
+
+    if (person) {
+      return person
     }
+
+    throw new Error(`Person with id '${params.id}' was not found.`);
   }
 
   public async update({ params, request }: HttpContextContract) {
-    const body = request.body()
 
     const person = await Person.findOrFail(params.id)
 
-    person.name = body.name
-    person.birth_date = body.birth_date
-    person.status = body.status
+    if (!person) {
+      throw new Error(`Person with id '${params.id}' was not found.`);
+    }
 
-    await person.save()
+    const body = request.body()
 
-    return {
-      message: 'Person updated successfully',
-      data: person,
+    try {
+      person.name = body.name
+      person.birth_date = body.birth_date
+      person.status = body.status
+
+      await person.save()
+
+      return person
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
   /*
     Status Options | 0 => Block/delete || 1 => Active
   */
-    public async destroy({ params }: HttpContextContract) {
-      const person = await Person.findOrFail(params.id)
-  
-      person.status = false
+  public async destroy({ params }: HttpContextContract) {
+    const person = await Person.findOrFail(params.id)
 
-      await person.save()
-  
-      return {
-        message: 'Person soft delete successfully',
-        data: person,
-      }
+    person.status = false
+
+    await person.save()
+
+    return {
+      message: 'Person soft delete successfully',
+      data: person,
     }
+  }
 }
