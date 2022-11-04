@@ -11,4 +11,6 @@ Route.group(() => {
   Route.get('/contact/email/:email', 'ContactsController.showContactByEmail');
   Route.put('/contact/:id', 'ContactsController.update');
 
+  Route.post('/user/register', 'UsersController.register')
+
 }).prefix('/api')
