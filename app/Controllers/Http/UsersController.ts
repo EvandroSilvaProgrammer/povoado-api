@@ -16,4 +16,20 @@ export default class UsersController {
             data: user,
         }
     }
+
+    public async login({ request, response, auth }: HttpContextContract) {
+        const password = await request.input('password')
+        const email = await request.input('email')
+    
+        try {
+          const token = await auth.use('api').attempt(email, password, {
+            expiresIn: '24hours',
+          })
+          return token.toJSON()
+        } catch {
+          return response
+            .status(400)
+            .send({ error: { message: 'User with provided credentials could not be found' } })
+        }
+      }
 }
