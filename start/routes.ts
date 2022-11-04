@@ -13,5 +13,6 @@ Route.group(() => {
 
   Route.post('/user/register', 'UsersController.register')
   Route.post('/user/login', 'UsersController.login')
+  Route.post('/user/logout', 'UsersController.logout')
 
 }).prefix('/api')
