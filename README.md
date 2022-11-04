@@ -62,7 +62,7 @@ corporativos.</li>
 
 #### Clone o repositório
 ```bash
-git clone https://github.com/EvandroSilvaProgrammer/
+git clone https://github.com/EvandroSilvaProgrammer/povoado-api.git
 ```
 #### Instale as dependências
 ```bash
